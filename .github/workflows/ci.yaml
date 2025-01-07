@@ -1,0 +1,27 @@
+name: CI-MacOS
+on:
+  push:
+    branches: [ dev, main ]
+  pull_request:
+    branches: [ dev, main ]
+env:
+  CI: true
+jobs:
+  build:
+    runs-on: macos-14
+    strategy:
+      matrix:
+        python-version: [3.12]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install --upgrade "jax[cpu]"
+      - name: Execute script
+        run: python3 script.py
